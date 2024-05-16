@@ -1,0 +1,796 @@
+
+keypad_reading_registers.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000188  08000000  08000000  00010000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000004c4  08000188  08000188  00010188  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000000  0800064c  08000654  00010654  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  3 .ARM.extab    00000000  0800064c  0800064c  00010654  2**0
+                  CONTENTS
+  4 .ARM          00000000  0800064c  0800064c  00010654  2**0
+                  CONTENTS
+  5 .preinit_array 00000000  0800064c  08000654  00010654  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  0800064c  0800064c  0001064c  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  7 .fini_array   00000004  08000650  08000650  00010650  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  8 .data         00000000  20000000  20000000  00010654  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .ccmram       00000000  10000000  10000000  00010654  2**0
+                  CONTENTS
+ 10 .bss          0000001c  20000000  20000000  00020000  2**2
+                  ALLOC
+ 11 ._user_heap_stack 00000604  2000001c  2000001c  00020000  2**0
+                  ALLOC
+ 12 .ARM.attributes 00000030  00000000  00000000  00010654  2**0
+                  CONTENTS, READONLY
+ 13 .comment      00000043  00000000  00000000  00010684  2**0
+                  CONTENTS, READONLY
+ 14 .debug_info   000001b1  00000000  00000000  000106c7  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_abbrev 000000c9  00000000  00000000  00010878  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_aranges 00000050  00000000  00000000  00010948  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_rnglists 00000033  00000000  00000000  00010998  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_macro  00000f5e  00000000  00000000  000109cb  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .debug_line   00000625  00000000  00000000  00011929  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 20 .debug_str    00003c3e  00000000  00000000  00011f4e  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_frame  00000084  00000000  00000000  00015b8c  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 22 .debug_line_str 00000051  00000000  00000000  00015c10  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000188 <__do_global_dtors_aux>:
+ 8000188:	b510      	push	{r4, lr}
+ 800018a:	4c05      	ldr	r4, [pc, #20]	; (80001a0 <__do_global_dtors_aux+0x18>)
+ 800018c:	7823      	ldrb	r3, [r4, #0]
+ 800018e:	b933      	cbnz	r3, 800019e <__do_global_dtors_aux+0x16>
+ 8000190:	4b04      	ldr	r3, [pc, #16]	; (80001a4 <__do_global_dtors_aux+0x1c>)
+ 8000192:	b113      	cbz	r3, 800019a <__do_global_dtors_aux+0x12>
+ 8000194:	4804      	ldr	r0, [pc, #16]	; (80001a8 <__do_global_dtors_aux+0x20>)
+ 8000196:	f3af 8000 	nop.w
+ 800019a:	2301      	movs	r3, #1
+ 800019c:	7023      	strb	r3, [r4, #0]
+ 800019e:	bd10      	pop	{r4, pc}
+ 80001a0:	20000000 	.word	0x20000000
+ 80001a4:	00000000 	.word	0x00000000
+ 80001a8:	08000634 	.word	0x08000634
+
+080001ac <frame_dummy>:
+ 80001ac:	b508      	push	{r3, lr}
+ 80001ae:	4b03      	ldr	r3, [pc, #12]	; (80001bc <frame_dummy+0x10>)
+ 80001b0:	b11b      	cbz	r3, 80001ba <frame_dummy+0xe>
+ 80001b2:	4903      	ldr	r1, [pc, #12]	; (80001c0 <frame_dummy+0x14>)
+ 80001b4:	4803      	ldr	r0, [pc, #12]	; (80001c4 <frame_dummy+0x18>)
+ 80001b6:	f3af 8000 	nop.w
+ 80001ba:	bd08      	pop	{r3, pc}
+ 80001bc:	00000000 	.word	0x00000000
+ 80001c0:	20000004 	.word	0x20000004
+ 80001c4:	08000634 	.word	0x08000634
+
+080001c8 <msDelay>:
+
+#if !defined(__SOFT_FP__) && defined(__ARM_FP)
+  #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
+#endif
+
+void msDelay(uint32_t time){
+ 80001c8:	b480      	push	{r7}
+ 80001ca:	b085      	sub	sp, #20
+ 80001cc:	af00      	add	r7, sp, #0
+ 80001ce:	6078      	str	r0, [r7, #4]
+	for(uint32_t i; i < time*4000; i++);
+ 80001d0:	e002      	b.n	80001d8 <msDelay+0x10>
+ 80001d2:	68fb      	ldr	r3, [r7, #12]
+ 80001d4:	3301      	adds	r3, #1
+ 80001d6:	60fb      	str	r3, [r7, #12]
+ 80001d8:	687b      	ldr	r3, [r7, #4]
+ 80001da:	f44f 627a 	mov.w	r2, #4000	; 0xfa0
+ 80001de:	fb02 f303 	mul.w	r3, r2, r3
+ 80001e2:	68fa      	ldr	r2, [r7, #12]
+ 80001e4:	429a      	cmp	r2, r3
+ 80001e6:	d3f4      	bcc.n	80001d2 <msDelay+0xa>
+}
+ 80001e8:	bf00      	nop
+ 80001ea:	bf00      	nop
+ 80001ec:	3714      	adds	r7, #20
+ 80001ee:	46bd      	mov	sp, r7
+ 80001f0:	f85d 7b04 	ldr.w	r7, [sp], #4
+ 80001f4:	4770      	bx	lr
+	...
+
+080001f8 <main>:
+
+int main(void)
+{
+ 80001f8:	b580      	push	{r7, lr}
+ 80001fa:	b088      	sub	sp, #32
+ 80001fc:	af00      	add	r7, sp, #0
+
+	uint32_t *pClkCtrlReg = (uint32_t)0x40023830;
+ 80001fe:	4b9f      	ldr	r3, [pc, #636]	; (800047c <main+0x284>)
+ 8000200:	61fb      	str	r3, [r7, #28]
+	uint32_t *pGpioDModeReg = (uint32_t)0x40020C00;
+ 8000202:	4b9f      	ldr	r3, [pc, #636]	; (8000480 <main+0x288>)
+ 8000204:	61bb      	str	r3, [r7, #24]
+	uint32_t *pGpioDOutReg = (uint32_t)0x40020C14;
+ 8000206:	4b9f      	ldr	r3, [pc, #636]	; (8000484 <main+0x28c>)
+ 8000208:	617b      	str	r3, [r7, #20]
+	uint32_t *pGpioDInReg = (uint32_t)0x40020C10;
+ 800020a:	4b9f      	ldr	r3, [pc, #636]	; (8000488 <main+0x290>)
+ 800020c:	613b      	str	r3, [r7, #16]
+	uint32_t *pGpioDPullReg = (uint32_t)0x40020C0C;
+ 800020e:	4b9f      	ldr	r3, [pc, #636]	; (800048c <main+0x294>)
+ 8000210:	60fb      	str	r3, [r7, #12]
+
+	*pClkCtrlReg |= (1<<3); //enable clock for port D
+ 8000212:	69fb      	ldr	r3, [r7, #28]
+ 8000214:	681b      	ldr	r3, [r3, #0]
+ 8000216:	f043 0208 	orr.w	r2, r3, #8
+ 800021a:	69fb      	ldr	r3, [r7, #28]
+ 800021c:	601a      	str	r2, [r3, #0]
+
+	*pGpioDModeReg &= ~0xFF; //make pd0, pd1, pd2, pd3 as output registers CLEAR RESET
+ 800021e:	69bb      	ldr	r3, [r7, #24]
+ 8000220:	681b      	ldr	r3, [r3, #0]
+ 8000222:	f023 02ff 	bic.w	r2, r3, #255	; 0xff
+ 8000226:	69bb      	ldr	r3, [r7, #24]
+ 8000228:	601a      	str	r2, [r3, #0]
+
+	*pGpioDModeReg |= 1<<6; // set pd3 as output
+ 800022a:	69bb      	ldr	r3, [r7, #24]
+ 800022c:	681b      	ldr	r3, [r3, #0]
+ 800022e:	f043 0240 	orr.w	r2, r3, #64	; 0x40
+ 8000232:	69bb      	ldr	r3, [r7, #24]
+ 8000234:	601a      	str	r2, [r3, #0]
+	*pGpioDModeReg |= 1<<4; // set pd2 as output
+ 8000236:	69bb      	ldr	r3, [r7, #24]
+ 8000238:	681b      	ldr	r3, [r3, #0]
+ 800023a:	f043 0210 	orr.w	r2, r3, #16
+ 800023e:	69bb      	ldr	r3, [r7, #24]
+ 8000240:	601a      	str	r2, [r3, #0]
+	*pGpioDModeReg |= 1<<2; // set pd1 as output
+ 8000242:	69bb      	ldr	r3, [r7, #24]
+ 8000244:	681b      	ldr	r3, [r3, #0]
+ 8000246:	f043 0204 	orr.w	r2, r3, #4
+ 800024a:	69bb      	ldr	r3, [r7, #24]
+ 800024c:	601a      	str	r2, [r3, #0]
+	*pGpioDModeReg |= 0x1;    // set pd0 as output
+ 800024e:	69bb      	ldr	r3, [r7, #24]
+ 8000250:	681b      	ldr	r3, [r3, #0]
+ 8000252:	f043 0201 	orr.w	r2, r3, #1
+ 8000256:	69bb      	ldr	r3, [r7, #24]
+ 8000258:	601a      	str	r2, [r3, #0]
+
+	*pGpioDOutReg |= 0xF; // set the pd0,pd1,pd2,pd3 as HIGH
+ 800025a:	697b      	ldr	r3, [r7, #20]
+ 800025c:	681b      	ldr	r3, [r3, #0]
+ 800025e:	f043 020f 	orr.w	r2, r3, #15
+ 8000262:	697b      	ldr	r3, [r7, #20]
+ 8000264:	601a      	str	r2, [r3, #0]
+
+
+	*pGpioDPullReg |= 1<<7; // set pd3 pull down register
+ 8000266:	68fb      	ldr	r3, [r7, #12]
+ 8000268:	681b      	ldr	r3, [r3, #0]
+ 800026a:	f043 0280 	orr.w	r2, r3, #128	; 0x80
+ 800026e:	68fb      	ldr	r3, [r7, #12]
+ 8000270:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 1<<5; // set pd2 pull down register
+ 8000272:	68fb      	ldr	r3, [r7, #12]
+ 8000274:	681b      	ldr	r3, [r3, #0]
+ 8000276:	f043 0220 	orr.w	r2, r3, #32
+ 800027a:	68fb      	ldr	r3, [r7, #12]
+ 800027c:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 1<<3; // set pd1 pull down register
+ 800027e:	68fb      	ldr	r3, [r7, #12]
+ 8000280:	681b      	ldr	r3, [r3, #0]
+ 8000282:	f043 0208 	orr.w	r2, r3, #8
+ 8000286:	68fb      	ldr	r3, [r7, #12]
+ 8000288:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 0x2; // set pd0 pull down register
+ 800028a:	68fb      	ldr	r3, [r7, #12]
+ 800028c:	681b      	ldr	r3, [r3, #0]
+ 800028e:	f043 0202 	orr.w	r2, r3, #2
+ 8000292:	68fb      	ldr	r3, [r7, #12]
+ 8000294:	601a      	str	r2, [r3, #0]
+
+
+
+	*pGpioDPullReg |= 1<<22; // set pd11 pull up register
+ 8000296:	68fb      	ldr	r3, [r7, #12]
+ 8000298:	681b      	ldr	r3, [r3, #0]
+ 800029a:	f443 0280 	orr.w	r2, r3, #4194304	; 0x400000
+ 800029e:	68fb      	ldr	r3, [r7, #12]
+ 80002a0:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 1<<20; // set pd10 pull up register
+ 80002a2:	68fb      	ldr	r3, [r7, #12]
+ 80002a4:	681b      	ldr	r3, [r3, #0]
+ 80002a6:	f443 1280 	orr.w	r2, r3, #1048576	; 0x100000
+ 80002aa:	68fb      	ldr	r3, [r7, #12]
+ 80002ac:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 1<<18;  // set pd9 pull up register
+ 80002ae:	68fb      	ldr	r3, [r7, #12]
+ 80002b0:	681b      	ldr	r3, [r3, #0]
+ 80002b2:	f443 2280 	orr.w	r2, r3, #262144	; 0x40000
+ 80002b6:	68fb      	ldr	r3, [r7, #12]
+ 80002b8:	601a      	str	r2, [r3, #0]
+	*pGpioDPullReg |= 1<<16; // set pd8 pull up register
+ 80002ba:	68fb      	ldr	r3, [r7, #12]
+ 80002bc:	681b      	ldr	r3, [r3, #0]
+ 80002be:	f443 3280 	orr.w	r2, r3, #65536	; 0x10000
+ 80002c2:	68fb      	ldr	r3, [r7, #12]
+ 80002c4:	601a      	str	r2, [r3, #0]
+	while(1){
+
+
+		//check the first row
+
+		*pGpioDOutReg &= ~0x1; // set the pd0 1st row as LOW
+ 80002c6:	697b      	ldr	r3, [r7, #20]
+ 80002c8:	681b      	ldr	r3, [r3, #0]
+ 80002ca:	f023 0201 	bic.w	r2, r3, #1
+ 80002ce:	697b      	ldr	r3, [r7, #20]
+ 80002d0:	601a      	str	r2, [r3, #0]
+
+		if(pin8_read = (*pGpioDInReg & (1<<8)) == 0){
+ 80002d2:	693b      	ldr	r3, [r7, #16]
+ 80002d4:	681b      	ldr	r3, [r3, #0]
+ 80002d6:	f403 7380 	and.w	r3, r3, #256	; 0x100
+ 80002da:	2b00      	cmp	r3, #0
+ 80002dc:	bf0c      	ite	eq
+ 80002de:	2301      	moveq	r3, #1
+ 80002e0:	2300      	movne	r3, #0
+ 80002e2:	b2db      	uxtb	r3, r3
+ 80002e4:	72fb      	strb	r3, [r7, #11]
+ 80002e6:	7afb      	ldrb	r3, [r7, #11]
+ 80002e8:	2b00      	cmp	r3, #0
+ 80002ea:	d005      	beq.n	80002f8 <main+0x100>
+			msDelay(200);
+ 80002ec:	20c8      	movs	r0, #200	; 0xc8
+ 80002ee:	f7ff ff6b 	bl	80001c8 <msDelay>
+			button_pressed = '1';
+ 80002f2:	2331      	movs	r3, #49	; 0x31
+ 80002f4:	71fb      	strb	r3, [r7, #7]
+ 80002f6:	e037      	b.n	8000368 <main+0x170>
+		}
+		else if(pin9_read = (*pGpioDInReg & (1<<9)) == 0){
+ 80002f8:	693b      	ldr	r3, [r7, #16]
+ 80002fa:	681b      	ldr	r3, [r3, #0]
+ 80002fc:	f403 7300 	and.w	r3, r3, #512	; 0x200
+ 8000300:	2b00      	cmp	r3, #0
+ 8000302:	bf0c      	ite	eq
+ 8000304:	2301      	moveq	r3, #1
+ 8000306:	2300      	movne	r3, #0
+ 8000308:	b2db      	uxtb	r3, r3
+ 800030a:	72bb      	strb	r3, [r7, #10]
+ 800030c:	7abb      	ldrb	r3, [r7, #10]
+ 800030e:	2b00      	cmp	r3, #0
+ 8000310:	d005      	beq.n	800031e <main+0x126>
+			msDelay(200);
+ 8000312:	20c8      	movs	r0, #200	; 0xc8
+ 8000314:	f7ff ff58 	bl	80001c8 <msDelay>
+			button_pressed = '2';
+ 8000318:	2332      	movs	r3, #50	; 0x32
+ 800031a:	71fb      	strb	r3, [r7, #7]
+ 800031c:	e024      	b.n	8000368 <main+0x170>
+			//printf("Button pressed: %c", button_pressed);
+		}
+		else if(pin10_read = (*pGpioDInReg & (1<<10)) == 0){
+ 800031e:	693b      	ldr	r3, [r7, #16]
+ 8000320:	681b      	ldr	r3, [r3, #0]
+ 8000322:	f403 6380 	and.w	r3, r3, #1024	; 0x400
+ 8000326:	2b00      	cmp	r3, #0
+ 8000328:	bf0c      	ite	eq
+ 800032a:	2301      	moveq	r3, #1
+ 800032c:	2300      	movne	r3, #0
+ 800032e:	b2db      	uxtb	r3, r3
+ 8000330:	727b      	strb	r3, [r7, #9]
+ 8000332:	7a7b      	ldrb	r3, [r7, #9]
+ 8000334:	2b00      	cmp	r3, #0
+ 8000336:	d005      	beq.n	8000344 <main+0x14c>
+			msDelay(200);
+ 8000338:	20c8      	movs	r0, #200	; 0xc8
+ 800033a:	f7ff ff45 	bl	80001c8 <msDelay>
+			button_pressed = '3';
+ 800033e:	2333      	movs	r3, #51	; 0x33
+ 8000340:	71fb      	strb	r3, [r7, #7]
+ 8000342:	e011      	b.n	8000368 <main+0x170>
+		}
+		else if(pin11_read = (*pGpioDInReg & (1<<11)) == 0){
+ 8000344:	693b      	ldr	r3, [r7, #16]
+ 8000346:	681b      	ldr	r3, [r3, #0]
+ 8000348:	f403 6300 	and.w	r3, r3, #2048	; 0x800
+ 800034c:	2b00      	cmp	r3, #0
+ 800034e:	bf0c      	ite	eq
+ 8000350:	2301      	moveq	r3, #1
+ 8000352:	2300      	movne	r3, #0
+ 8000354:	b2db      	uxtb	r3, r3
+ 8000356:	723b      	strb	r3, [r7, #8]
+ 8000358:	7a3b      	ldrb	r3, [r7, #8]
+ 800035a:	2b00      	cmp	r3, #0
+ 800035c:	d004      	beq.n	8000368 <main+0x170>
+			msDelay(200);
+ 800035e:	20c8      	movs	r0, #200	; 0xc8
+ 8000360:	f7ff ff32 	bl	80001c8 <msDelay>
+			button_pressed = 'A';
+ 8000364:	2341      	movs	r3, #65	; 0x41
+ 8000366:	71fb      	strb	r3, [r7, #7]
+		}
+
+		*pGpioDOutReg |= 0xF; // set the pd0,pd1,pd2,pd3 as HIGH
+ 8000368:	697b      	ldr	r3, [r7, #20]
+ 800036a:	681b      	ldr	r3, [r3, #0]
+ 800036c:	f043 020f 	orr.w	r2, r3, #15
+ 8000370:	697b      	ldr	r3, [r7, #20]
+ 8000372:	601a      	str	r2, [r3, #0]
+
+
+		//check the second row
+		*pGpioDOutReg &= ~0x2; // set the pd1 2ond row as LOW
+ 8000374:	697b      	ldr	r3, [r7, #20]
+ 8000376:	681b      	ldr	r3, [r3, #0]
+ 8000378:	f023 0202 	bic.w	r2, r3, #2
+ 800037c:	697b      	ldr	r3, [r7, #20]
+ 800037e:	601a      	str	r2, [r3, #0]
+
+		if(pin8_read = (*pGpioDInReg & (1<<8)) == 0){
+ 8000380:	693b      	ldr	r3, [r7, #16]
+ 8000382:	681b      	ldr	r3, [r3, #0]
+ 8000384:	f403 7380 	and.w	r3, r3, #256	; 0x100
+ 8000388:	2b00      	cmp	r3, #0
+ 800038a:	bf0c      	ite	eq
+ 800038c:	2301      	moveq	r3, #1
+ 800038e:	2300      	movne	r3, #0
+ 8000390:	b2db      	uxtb	r3, r3
+ 8000392:	72fb      	strb	r3, [r7, #11]
+ 8000394:	7afb      	ldrb	r3, [r7, #11]
+ 8000396:	2b00      	cmp	r3, #0
+ 8000398:	d005      	beq.n	80003a6 <main+0x1ae>
+			msDelay(200);
+ 800039a:	20c8      	movs	r0, #200	; 0xc8
+ 800039c:	f7ff ff14 	bl	80001c8 <msDelay>
+			button_pressed = '4';
+ 80003a0:	2334      	movs	r3, #52	; 0x34
+ 80003a2:	71fb      	strb	r3, [r7, #7]
+ 80003a4:	e037      	b.n	8000416 <main+0x21e>
+		}
+		else if(pin9_read = (*pGpioDInReg & (1<<9)) == 0){
+ 80003a6:	693b      	ldr	r3, [r7, #16]
+ 80003a8:	681b      	ldr	r3, [r3, #0]
+ 80003aa:	f403 7300 	and.w	r3, r3, #512	; 0x200
+ 80003ae:	2b00      	cmp	r3, #0
+ 80003b0:	bf0c      	ite	eq
+ 80003b2:	2301      	moveq	r3, #1
+ 80003b4:	2300      	movne	r3, #0
+ 80003b6:	b2db      	uxtb	r3, r3
+ 80003b8:	72bb      	strb	r3, [r7, #10]
+ 80003ba:	7abb      	ldrb	r3, [r7, #10]
+ 80003bc:	2b00      	cmp	r3, #0
+ 80003be:	d005      	beq.n	80003cc <main+0x1d4>
+			msDelay(200);
+ 80003c0:	20c8      	movs	r0, #200	; 0xc8
+ 80003c2:	f7ff ff01 	bl	80001c8 <msDelay>
+			button_pressed = '5';
+ 80003c6:	2335      	movs	r3, #53	; 0x35
+ 80003c8:	71fb      	strb	r3, [r7, #7]
+ 80003ca:	e024      	b.n	8000416 <main+0x21e>
+		}
+		else if(pin10_read = (*pGpioDInReg & (1<<10)) == 0){
+ 80003cc:	693b      	ldr	r3, [r7, #16]
+ 80003ce:	681b      	ldr	r3, [r3, #0]
+ 80003d0:	f403 6380 	and.w	r3, r3, #1024	; 0x400
+ 80003d4:	2b00      	cmp	r3, #0
+ 80003d6:	bf0c      	ite	eq
+ 80003d8:	2301      	moveq	r3, #1
+ 80003da:	2300      	movne	r3, #0
+ 80003dc:	b2db      	uxtb	r3, r3
+ 80003de:	727b      	strb	r3, [r7, #9]
+ 80003e0:	7a7b      	ldrb	r3, [r7, #9]
+ 80003e2:	2b00      	cmp	r3, #0
+ 80003e4:	d005      	beq.n	80003f2 <main+0x1fa>
+			msDelay(200);
+ 80003e6:	20c8      	movs	r0, #200	; 0xc8
+ 80003e8:	f7ff feee 	bl	80001c8 <msDelay>
+			button_pressed = '6';
+ 80003ec:	2336      	movs	r3, #54	; 0x36
+ 80003ee:	71fb      	strb	r3, [r7, #7]
+ 80003f0:	e011      	b.n	8000416 <main+0x21e>
+		}
+		else if(pin11_read = (*pGpioDInReg & (1<<11)) == 0){
+ 80003f2:	693b      	ldr	r3, [r7, #16]
+ 80003f4:	681b      	ldr	r3, [r3, #0]
+ 80003f6:	f403 6300 	and.w	r3, r3, #2048	; 0x800
+ 80003fa:	2b00      	cmp	r3, #0
+ 80003fc:	bf0c      	ite	eq
+ 80003fe:	2301      	moveq	r3, #1
+ 8000400:	2300      	movne	r3, #0
+ 8000402:	b2db      	uxtb	r3, r3
+ 8000404:	723b      	strb	r3, [r7, #8]
+ 8000406:	7a3b      	ldrb	r3, [r7, #8]
+ 8000408:	2b00      	cmp	r3, #0
+ 800040a:	d004      	beq.n	8000416 <main+0x21e>
+			msDelay(200);
+ 800040c:	20c8      	movs	r0, #200	; 0xc8
+ 800040e:	f7ff fedb 	bl	80001c8 <msDelay>
+			button_pressed = 'B';
+ 8000412:	2342      	movs	r3, #66	; 0x42
+ 8000414:	71fb      	strb	r3, [r7, #7]
+		}
+		*pGpioDOutReg |= 0xF; // set the pd0,pd1,pd2,pd3 as HIGH
+ 8000416:	697b      	ldr	r3, [r7, #20]
+ 8000418:	681b      	ldr	r3, [r3, #0]
+ 800041a:	f043 020f 	orr.w	r2, r3, #15
+ 800041e:	697b      	ldr	r3, [r7, #20]
+ 8000420:	601a      	str	r2, [r3, #0]
+
+		//check the third row
+		*pGpioDOutReg &= ~(1<<2); // set the pd2 3ird row as LOW
+ 8000422:	697b      	ldr	r3, [r7, #20]
+ 8000424:	681b      	ldr	r3, [r3, #0]
+ 8000426:	f023 0204 	bic.w	r2, r3, #4
+ 800042a:	697b      	ldr	r3, [r7, #20]
+ 800042c:	601a      	str	r2, [r3, #0]
+
+		if(pin8_read = (*pGpioDInReg & (1<<8)) == 0){
+ 800042e:	693b      	ldr	r3, [r7, #16]
+ 8000430:	681b      	ldr	r3, [r3, #0]
+ 8000432:	f403 7380 	and.w	r3, r3, #256	; 0x100
+ 8000436:	2b00      	cmp	r3, #0
+ 8000438:	bf0c      	ite	eq
+ 800043a:	2301      	moveq	r3, #1
+ 800043c:	2300      	movne	r3, #0
+ 800043e:	b2db      	uxtb	r3, r3
+ 8000440:	72fb      	strb	r3, [r7, #11]
+ 8000442:	7afb      	ldrb	r3, [r7, #11]
+ 8000444:	2b00      	cmp	r3, #0
+ 8000446:	d005      	beq.n	8000454 <main+0x25c>
+			msDelay(200);
+ 8000448:	20c8      	movs	r0, #200	; 0xc8
+ 800044a:	f7ff febd 	bl	80001c8 <msDelay>
+			button_pressed = '7';
+ 800044e:	2337      	movs	r3, #55	; 0x37
+ 8000450:	71fb      	strb	r3, [r7, #7]
+ 8000452:	e042      	b.n	80004da <main+0x2e2>
+		}
+		else if(pin9_read = (*pGpioDInReg & (1<<9)) == 0){
+ 8000454:	693b      	ldr	r3, [r7, #16]
+ 8000456:	681b      	ldr	r3, [r3, #0]
+ 8000458:	f403 7300 	and.w	r3, r3, #512	; 0x200
+ 800045c:	2b00      	cmp	r3, #0
+ 800045e:	bf0c      	ite	eq
+ 8000460:	2301      	moveq	r3, #1
+ 8000462:	2300      	movne	r3, #0
+ 8000464:	b2db      	uxtb	r3, r3
+ 8000466:	72bb      	strb	r3, [r7, #10]
+ 8000468:	7abb      	ldrb	r3, [r7, #10]
+ 800046a:	2b00      	cmp	r3, #0
+ 800046c:	d010      	beq.n	8000490 <main+0x298>
+			msDelay(200);
+ 800046e:	20c8      	movs	r0, #200	; 0xc8
+ 8000470:	f7ff feaa 	bl	80001c8 <msDelay>
+			button_pressed = '8';
+ 8000474:	2338      	movs	r3, #56	; 0x38
+ 8000476:	71fb      	strb	r3, [r7, #7]
+ 8000478:	e02f      	b.n	80004da <main+0x2e2>
+ 800047a:	bf00      	nop
+ 800047c:	40023830 	.word	0x40023830
+ 8000480:	40020c00 	.word	0x40020c00
+ 8000484:	40020c14 	.word	0x40020c14
+ 8000488:	40020c10 	.word	0x40020c10
+ 800048c:	40020c0c 	.word	0x40020c0c
+		}
+		else if(pin10_read = (*pGpioDInReg & (1<<10)) == 0){
+ 8000490:	693b      	ldr	r3, [r7, #16]
+ 8000492:	681b      	ldr	r3, [r3, #0]
+ 8000494:	f403 6380 	and.w	r3, r3, #1024	; 0x400
+ 8000498:	2b00      	cmp	r3, #0
+ 800049a:	bf0c      	ite	eq
+ 800049c:	2301      	moveq	r3, #1
+ 800049e:	2300      	movne	r3, #0
+ 80004a0:	b2db      	uxtb	r3, r3
+ 80004a2:	727b      	strb	r3, [r7, #9]
+ 80004a4:	7a7b      	ldrb	r3, [r7, #9]
+ 80004a6:	2b00      	cmp	r3, #0
+ 80004a8:	d005      	beq.n	80004b6 <main+0x2be>
+			msDelay(200);
+ 80004aa:	20c8      	movs	r0, #200	; 0xc8
+ 80004ac:	f7ff fe8c 	bl	80001c8 <msDelay>
+			button_pressed = '9';
+ 80004b0:	2339      	movs	r3, #57	; 0x39
+ 80004b2:	71fb      	strb	r3, [r7, #7]
+ 80004b4:	e011      	b.n	80004da <main+0x2e2>
+		}
+		else if(pin11_read = (*pGpioDInReg & (1<<11)) == 0){
+ 80004b6:	693b      	ldr	r3, [r7, #16]
+ 80004b8:	681b      	ldr	r3, [r3, #0]
+ 80004ba:	f403 6300 	and.w	r3, r3, #2048	; 0x800
+ 80004be:	2b00      	cmp	r3, #0
+ 80004c0:	bf0c      	ite	eq
+ 80004c2:	2301      	moveq	r3, #1
+ 80004c4:	2300      	movne	r3, #0
+ 80004c6:	b2db      	uxtb	r3, r3
+ 80004c8:	723b      	strb	r3, [r7, #8]
+ 80004ca:	7a3b      	ldrb	r3, [r7, #8]
+ 80004cc:	2b00      	cmp	r3, #0
+ 80004ce:	d004      	beq.n	80004da <main+0x2e2>
+			msDelay(200);
+ 80004d0:	20c8      	movs	r0, #200	; 0xc8
+ 80004d2:	f7ff fe79 	bl	80001c8 <msDelay>
+			button_pressed = 'C';
+ 80004d6:	2343      	movs	r3, #67	; 0x43
+ 80004d8:	71fb      	strb	r3, [r7, #7]
+		}
+		*pGpioDOutReg |= 0xF; // set the pd0,pd1,pd2,pd3 as HIGH
+ 80004da:	697b      	ldr	r3, [r7, #20]
+ 80004dc:	681b      	ldr	r3, [r3, #0]
+ 80004de:	f043 020f 	orr.w	r2, r3, #15
+ 80004e2:	697b      	ldr	r3, [r7, #20]
+ 80004e4:	601a      	str	r2, [r3, #0]
+
+		//check the fourth row
+		*pGpioDOutReg &= ~(1<<3); // set the pd3 4th row as LOW
+ 80004e6:	697b      	ldr	r3, [r7, #20]
+ 80004e8:	681b      	ldr	r3, [r3, #0]
+ 80004ea:	f023 0208 	bic.w	r2, r3, #8
+ 80004ee:	697b      	ldr	r3, [r7, #20]
+ 80004f0:	601a      	str	r2, [r3, #0]
+
+		if(pin8_read = (*pGpioDInReg & (1<<8)) == 0){
+ 80004f2:	693b      	ldr	r3, [r7, #16]
+ 80004f4:	681b      	ldr	r3, [r3, #0]
+ 80004f6:	f403 7380 	and.w	r3, r3, #256	; 0x100
+ 80004fa:	2b00      	cmp	r3, #0
+ 80004fc:	bf0c      	ite	eq
+ 80004fe:	2301      	moveq	r3, #1
+ 8000500:	2300      	movne	r3, #0
+ 8000502:	b2db      	uxtb	r3, r3
+ 8000504:	72fb      	strb	r3, [r7, #11]
+ 8000506:	7afb      	ldrb	r3, [r7, #11]
+ 8000508:	2b00      	cmp	r3, #0
+ 800050a:	d005      	beq.n	8000518 <main+0x320>
+			msDelay(200);
+ 800050c:	20c8      	movs	r0, #200	; 0xc8
+ 800050e:	f7ff fe5b 	bl	80001c8 <msDelay>
+			button_pressed = '*';
+ 8000512:	232a      	movs	r3, #42	; 0x2a
+ 8000514:	71fb      	strb	r3, [r7, #7]
+ 8000516:	e037      	b.n	8000588 <main+0x390>
+		}
+		else if(pin9_read = (*pGpioDInReg & (1<<9)) == 0){
+ 8000518:	693b      	ldr	r3, [r7, #16]
+ 800051a:	681b      	ldr	r3, [r3, #0]
+ 800051c:	f403 7300 	and.w	r3, r3, #512	; 0x200
+ 8000520:	2b00      	cmp	r3, #0
+ 8000522:	bf0c      	ite	eq
+ 8000524:	2301      	moveq	r3, #1
+ 8000526:	2300      	movne	r3, #0
+ 8000528:	b2db      	uxtb	r3, r3
+ 800052a:	72bb      	strb	r3, [r7, #10]
+ 800052c:	7abb      	ldrb	r3, [r7, #10]
+ 800052e:	2b00      	cmp	r3, #0
+ 8000530:	d005      	beq.n	800053e <main+0x346>
+			msDelay(200);
+ 8000532:	20c8      	movs	r0, #200	; 0xc8
+ 8000534:	f7ff fe48 	bl	80001c8 <msDelay>
+			button_pressed = '0';
+ 8000538:	2330      	movs	r3, #48	; 0x30
+ 800053a:	71fb      	strb	r3, [r7, #7]
+ 800053c:	e024      	b.n	8000588 <main+0x390>
+		}
+		else if(pin10_read = (*pGpioDInReg & (1<<10)) == 0){
+ 800053e:	693b      	ldr	r3, [r7, #16]
+ 8000540:	681b      	ldr	r3, [r3, #0]
+ 8000542:	f403 6380 	and.w	r3, r3, #1024	; 0x400
+ 8000546:	2b00      	cmp	r3, #0
+ 8000548:	bf0c      	ite	eq
+ 800054a:	2301      	moveq	r3, #1
+ 800054c:	2300      	movne	r3, #0
+ 800054e:	b2db      	uxtb	r3, r3
+ 8000550:	727b      	strb	r3, [r7, #9]
+ 8000552:	7a7b      	ldrb	r3, [r7, #9]
+ 8000554:	2b00      	cmp	r3, #0
+ 8000556:	d005      	beq.n	8000564 <main+0x36c>
+			msDelay(200);
+ 8000558:	20c8      	movs	r0, #200	; 0xc8
+ 800055a:	f7ff fe35 	bl	80001c8 <msDelay>
+			button_pressed = '#';
+ 800055e:	2323      	movs	r3, #35	; 0x23
+ 8000560:	71fb      	strb	r3, [r7, #7]
+ 8000562:	e011      	b.n	8000588 <main+0x390>
+		}
+		else if(pin11_read = (*pGpioDInReg & (1<<11)) == 0){
+ 8000564:	693b      	ldr	r3, [r7, #16]
+ 8000566:	681b      	ldr	r3, [r3, #0]
+ 8000568:	f403 6300 	and.w	r3, r3, #2048	; 0x800
+ 800056c:	2b00      	cmp	r3, #0
+ 800056e:	bf0c      	ite	eq
+ 8000570:	2301      	moveq	r3, #1
+ 8000572:	2300      	movne	r3, #0
+ 8000574:	b2db      	uxtb	r3, r3
+ 8000576:	723b      	strb	r3, [r7, #8]
+ 8000578:	7a3b      	ldrb	r3, [r7, #8]
+ 800057a:	2b00      	cmp	r3, #0
+ 800057c:	d004      	beq.n	8000588 <main+0x390>
+			msDelay(200);
+ 800057e:	20c8      	movs	r0, #200	; 0xc8
+ 8000580:	f7ff fe22 	bl	80001c8 <msDelay>
+			button_pressed = 'D';
+ 8000584:	2344      	movs	r3, #68	; 0x44
+ 8000586:	71fb      	strb	r3, [r7, #7]
+		}
+		*pGpioDOutReg |= 0xF; // set the pd0,pd1,pd2,pd3 as HIGH
+ 8000588:	697b      	ldr	r3, [r7, #20]
+ 800058a:	681b      	ldr	r3, [r3, #0]
+ 800058c:	f043 020f 	orr.w	r2, r3, #15
+ 8000590:	697b      	ldr	r3, [r7, #20]
+ 8000592:	601a      	str	r2, [r3, #0]
+		*pGpioDOutReg &= ~0x1; // set the pd0 1st row as LOW
+ 8000594:	e697      	b.n	80002c6 <main+0xce>
+ 8000596:	bf00      	nop
+
+08000598 <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 8000598:	480d      	ldr	r0, [pc, #52]	; (80005d0 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 800059a:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 800059c:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 80005a0:	480c      	ldr	r0, [pc, #48]	; (80005d4 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 80005a2:	490d      	ldr	r1, [pc, #52]	; (80005d8 <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 80005a4:	4a0d      	ldr	r2, [pc, #52]	; (80005dc <LoopForever+0xe>)
+  movs r3, #0
+ 80005a6:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 80005a8:	e002      	b.n	80005b0 <LoopCopyDataInit>
+
+080005aa <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 80005aa:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 80005ac:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 80005ae:	3304      	adds	r3, #4
+
+080005b0 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 80005b0:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 80005b2:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 80005b4:	d3f9      	bcc.n	80005aa <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 80005b6:	4a0a      	ldr	r2, [pc, #40]	; (80005e0 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 80005b8:	4c0a      	ldr	r4, [pc, #40]	; (80005e4 <LoopForever+0x16>)
+  movs r3, #0
+ 80005ba:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 80005bc:	e001      	b.n	80005c2 <LoopFillZerobss>
+
+080005be <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 80005be:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 80005c0:	3204      	adds	r2, #4
+
+080005c2 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 80005c2:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 80005c4:	d3fb      	bcc.n	80005be <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 80005c6:	f000 f811 	bl	80005ec <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 80005ca:	f7ff fe15 	bl	80001f8 <main>
+
+080005ce <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 80005ce:	e7fe      	b.n	80005ce <LoopForever>
+  ldr   r0, =_estack
+ 80005d0:	20020000 	.word	0x20020000
+  ldr r0, =_sdata
+ 80005d4:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 80005d8:	20000000 	.word	0x20000000
+  ldr r2, =_sidata
+ 80005dc:	08000654 	.word	0x08000654
+  ldr r2, =_sbss
+ 80005e0:	20000000 	.word	0x20000000
+  ldr r4, =_ebss
+ 80005e4:	2000001c 	.word	0x2000001c
+
+080005e8 <ADC_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 80005e8:	e7fe      	b.n	80005e8 <ADC_IRQHandler>
+	...
+
+080005ec <__libc_init_array>:
+ 80005ec:	b570      	push	{r4, r5, r6, lr}
+ 80005ee:	4d0d      	ldr	r5, [pc, #52]	; (8000624 <__libc_init_array+0x38>)
+ 80005f0:	4c0d      	ldr	r4, [pc, #52]	; (8000628 <__libc_init_array+0x3c>)
+ 80005f2:	1b64      	subs	r4, r4, r5
+ 80005f4:	10a4      	asrs	r4, r4, #2
+ 80005f6:	2600      	movs	r6, #0
+ 80005f8:	42a6      	cmp	r6, r4
+ 80005fa:	d109      	bne.n	8000610 <__libc_init_array+0x24>
+ 80005fc:	4d0b      	ldr	r5, [pc, #44]	; (800062c <__libc_init_array+0x40>)
+ 80005fe:	4c0c      	ldr	r4, [pc, #48]	; (8000630 <__libc_init_array+0x44>)
+ 8000600:	f000 f818 	bl	8000634 <_init>
+ 8000604:	1b64      	subs	r4, r4, r5
+ 8000606:	10a4      	asrs	r4, r4, #2
+ 8000608:	2600      	movs	r6, #0
+ 800060a:	42a6      	cmp	r6, r4
+ 800060c:	d105      	bne.n	800061a <__libc_init_array+0x2e>
+ 800060e:	bd70      	pop	{r4, r5, r6, pc}
+ 8000610:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000614:	4798      	blx	r3
+ 8000616:	3601      	adds	r6, #1
+ 8000618:	e7ee      	b.n	80005f8 <__libc_init_array+0xc>
+ 800061a:	f855 3b04 	ldr.w	r3, [r5], #4
+ 800061e:	4798      	blx	r3
+ 8000620:	3601      	adds	r6, #1
+ 8000622:	e7f2      	b.n	800060a <__libc_init_array+0x1e>
+ 8000624:	0800064c 	.word	0x0800064c
+ 8000628:	0800064c 	.word	0x0800064c
+ 800062c:	0800064c 	.word	0x0800064c
+ 8000630:	08000650 	.word	0x08000650
+
+08000634 <_init>:
+ 8000634:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000636:	bf00      	nop
+ 8000638:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 800063a:	bc08      	pop	{r3}
+ 800063c:	469e      	mov	lr, r3
+ 800063e:	4770      	bx	lr
+
+08000640 <_fini>:
+ 8000640:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 8000642:	bf00      	nop
+ 8000644:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 8000646:	bc08      	pop	{r3}
+ 8000648:	469e      	mov	lr, r3
+ 800064a:	4770      	bx	lr
